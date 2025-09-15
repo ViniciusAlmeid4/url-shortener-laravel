@@ -1,0 +1,5 @@
+@media (prefers-color-scheme: dark) {
+    select.datatable-selector {
+        background: #1a1a1a !important;
+    }
+}
