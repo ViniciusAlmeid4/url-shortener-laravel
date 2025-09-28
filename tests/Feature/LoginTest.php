@@ -2,26 +2,83 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class LoginTest extends TestCase {
-    /**
-     * A basic feature test example.
-     */
-    public function correct_credentials(): void {
-        // // Arrange: create a user
-        // $user = \App\Models\User::factory()->create([
-        //     'email' => 'teste@gmail.com',
-        //     'password' => bcrypt('password123'),
-        // ]);
+    use RefreshDatabase;
 
-        // $response = $this->post('/login', [
-        //     'email' => $user->email,
-        //     'password' => 'password123',
-        // ]);
+    private User $user;
 
-        // $response->assertStatus(200);
+    protected function setUp(): void {
+        parent::setUp();
+
+        // create a default test user
+        $this->user = User::factory()->create([
+            'email' => 'test@gmail.com',
+            'password' => Hash::make('secret123'),
+        ]);
+    }
+
+    #[Test]
+    public function loginPageRender(): void {
+        $response = $this->get('/login');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('login');
+    }
+
+    #[Test]
+    public function loginMissingParameters(): void {
+        $response = $this->postJson('/login', []);
+
+        $response->assertStatus(422);
+
+        $response->assertJsonValidationErrors(['email', 'password']);
+    }
+
+
+    #[Test]
+    public function loginWithWrongParameters(): void {
+        $response = $this->postJson('/login', [
+            "email" => "errado@gmail.com",
+            "password" => "wrongPassword"
+        ]);
+
+        $response->assertStatus(401);
+
+        $response->assertJsonValidationErrors(['email']);
+
+        $response->assertJsonFragment(['email' => true]);
+    }
+
+    #[Test]
+    public function loginWithCorrectPassworrd(): void {
+        $response = $this->postJson('/login', [
+            "email" => "test@gmail.com",
+            "password" => "secret123"
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            "redirect" => route('home')
+        ]);
+    }
+
+    #[Test]
+    public function loginWithWrongPassworrd(): void {
+        $response = $this->postJson('/login', [
+            "email" => "test@gmail.com",
+            "password" => "wrongPassword"
+        ]);
+
+        $response->assertStatus(401);
+
+        $response->assertJsonValidationErrors(['email']);
+
+        $response->assertJsonFragment(['email' => true]);
     }
 }

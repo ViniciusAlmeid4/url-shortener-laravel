@@ -27,6 +27,9 @@ class LoginController extends Controller {
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
                 'message' => 'Invalid credentials.',
+                'errors' => [
+                    'email' => empty($user)
+                ]
             ], 401);
         }
 

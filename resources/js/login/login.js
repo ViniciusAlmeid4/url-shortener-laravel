@@ -48,7 +48,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert(Object.values(errors).flat().join("\n"));
 
             } else if (error.response && error.response.status === 401) {
-                applyErrorStyles(labelEmail);
+                if (error.response.data.errors.email) {
+                    applyErrorStyles(labelEmail);
+                }
                 applyErrorStyles(labelPassword);
 
                 alert("There wasn't found any accounts for the login provided.")
