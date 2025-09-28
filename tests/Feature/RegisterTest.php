@@ -10,6 +10,14 @@ class RegisterTest extends TestCase {
     use RefreshDatabase;
 
     #[Test]
+    public function registerPageRender(): void {
+        $response = $this->get('/register');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('register');
+    }
+
+    #[Test]
     public function createUser(): void {
         $response = $this->postJson('/register', [
             "email" => "teste@gmail.com",
