@@ -32,7 +32,7 @@ class LoginTest extends TestCase {
     }
 
     #[Test]
-    public function loginMissingParameters(): void {
+    public function loginWithMissingParameters(): void {
         $response = $this->postJson('/login', []);
 
         $response->assertStatus(422);
