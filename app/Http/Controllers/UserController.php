@@ -27,7 +27,7 @@ class UserController extends Controller {
     public function store(Request $request) {
         $validated = $request->validate([
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['min:8']
+            'password' => ['required', 'min:8']
         ]);
 
         $user = User::create($validated);
@@ -37,7 +37,7 @@ class UserController extends Controller {
         return response()->json([
             'message' => 'User created successfully',
             'redirect' => route('home'),
-        ], 200);
+        ], 201);
     }
 
     /**
