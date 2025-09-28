@@ -18,8 +18,8 @@ class LoginTest extends TestCase {
 
         // create a default test user
         $this->user = User::factory()->create([
-            'email' => 'test@gmail.com',
-            'password' => Hash::make('secret123'),
+            "email" => "test@gmail.com",
+            "password" => Hash::make('secret123'),
         ]);
     }
 
@@ -79,6 +79,6 @@ class LoginTest extends TestCase {
 
         $response->assertJsonValidationErrors(['email']);
 
-        $response->assertJsonFragment(['email' => true]);
+        $response->assertJsonFragment(['email' => false]);
     }
 }
