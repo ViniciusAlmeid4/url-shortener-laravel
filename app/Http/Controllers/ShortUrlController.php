@@ -78,8 +78,8 @@ class ShortUrlController extends Controller {
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, string $code) {
-        if (!$request->user()->id) {
-            view('login', ['error' => 'Please, login first!']);
+        if (!$request->user()) {
+            abort(403, 'Please, login first!');
         }
 
         $url = ShortUrl::where('code', $code)->firstOrFail();

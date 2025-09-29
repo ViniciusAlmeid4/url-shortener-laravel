@@ -13,9 +13,9 @@ Route::get('/register', [UserController::class, 'create'])->name('register');
 
 Route::post('/register', [UserController::class, 'store'])->name('postRegister');
 
-Route::get('/', [ShortUrlController::class, 'index'])->name('home')->middleware('auth');
+Route::get('/', [ShortUrlController::class, 'index'])->middleware('auth')->name('home');
 
-Route::post('/shorten/', [ShortUrlController::class, 'store'])->middleware('auth')->name('storeUrl');
+Route::post('/shorten', [ShortUrlController::class, 'store'])->middleware('auth')->name('storeUrl');
 
 Route::get('/shorten/{code}', [ShortUrlController::class, 'showByCode'])->name('showByCode');
 
@@ -23,4 +23,4 @@ Route::post('/shorten/{code}', [ShortUrlController::class, 'checkWithPassword'])
 
 Route::delete('/shorten/{code}', [ShortUrlController::class, 'destroy'])->name('destroyUrl');
 
-Route::get('/logout', [LoginController::class, 'destroy'])->name('logout')->middleware('auth');
+Route::get('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
